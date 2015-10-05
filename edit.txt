@@ -1,0 +1,27 @@
+gomoku
+
+EXE
+--main
+execute program
+
+CLASS
+--gameboard
+display game screen
+input array(state(t)) 
+output array(state(t+1))
+
+--judge
+judge win or lose
+input array(state(t))
+output (win,lose,the other)
+
+--cp
+where to put stone for auto-player
+input array(state(t))
+output (x,y)
+
+---evaluation
+calculate evaluation functionn
+input array(state(t)), (x,y), turn
+output value
+
