@@ -1,5 +1,3 @@
-#coding:utf-8
-
 EMPTY, BLACK, WHITE, BORDER = 0,1,2,3
 WIN,LOSE = 1,0
 

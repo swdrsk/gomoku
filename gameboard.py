@@ -18,11 +18,10 @@ class gameboard:
         self.screen = pygame.display.set_mode(SCR_RECT.size)
         pygame.display.set_caption(u"Gomoku Narabe")
         self.font = pygame.font.SysFont(None, 16)
-        # NUM_ROW x NUM_COLサイズのフィールド（2次元リスト）
         self.field = [[EMPTY for x in range(NUM_COL)] for y in range(NUM_ROW)]
         self.generation = 0  # 世代数
         self.run = False  # シミュレーション実行中か？
-        self.cursor = [NUM_COL/2, NUM_ROW/2]  # カーソルの位置
+        self.cursor = [NUM_COL/2, NUM_ROW/2]
         self.turn = False 
         #self.rule = rule.rule(self.field)
 
@@ -102,7 +101,3 @@ class gameboard:
         pygame.draw.rect(screen, (0,0,255), Rect(self.cursor[0]*CS,self.cursor[1]*CS,CS,CS), 1)
         # ゲーム情報を描画
         #screen.blit(self.font.render("generation:%d" % self.generation, True, (0,255,0)), (0,0))
-
-if __name__ == "__main__":
-    BOARD = gameboard()
-    BOARD.main()
