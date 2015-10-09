@@ -59,7 +59,7 @@ class gameboard:
                     self.cursor = [x, y]
                     self.mouse_event(x,y)
                     print self.history
-                    if self.rule.judge(self.turn,self.rule.field):
+                    if self.rule.judge(self.turn,r.field):
                         self.gamewin(self.screen)
                         FLAG = 0
 
