@@ -1,9 +1,13 @@
 class test1:
     def __init__(self):
+        self.point = 1
         print 'test1_init'
     def print_s(self,s):
         print 'test1:'+s
+    def rewrite(self,point):
+        print point, self.point
 
 if __name__=='__main__':
-    test1.print_S('hello world')
-
+    t1 = test1()
+    t1.print_s('hello world')
+    t1.rewrite(19)

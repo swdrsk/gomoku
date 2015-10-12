@@ -2,11 +2,13 @@
 
 EMPTY, BLACK, WHITE, BORDER = 0,1,2,3
 WIN,LOSE = 1,0
-D = 2
+D = 3
 CP_TURN = WHITE
 
 
 import pdb
+from copy import deepcopy
+import sys
 
 class rule:
     def __init__(self,board):
@@ -114,7 +116,7 @@ class rule:
 
     def complay(self):
         depth = D
-        vfield = self.field #virtual field
+        vfield = deepcopy(self.field) #virtual field
         efield = [[0 for i in range(self.size_x)] for j in range(self.size_y)]
         cp_turn = CP_TURN
         ply_turn = self.turn_change(cp_turn)
@@ -129,6 +131,7 @@ class rule:
                 history,FLAG = self.search(vfield,turn,history)
             turn = self.turn_change(turn)
 
+        pdb.set_trace()#####################
         [cx,cy] = history.max_eval().pop(0) 
         
         if cx*cy*(cx+cy)<0: #if not both are positive
@@ -141,20 +144,21 @@ class rule:
         if not history.point == []:
             for item in history.point:
                 vturn = self.turn_change(turn)
-                iitem = item
+                iitem = deepcopy(item)
                 while iitem!=[]:
                     p = iitem.pop()
                     field[p[0]][p[1]] = vturn
                     vturn = self.turn_change(vturn)
 
+                history.delete(item)
                 for x in range(self.size_x):
                     for y in range(self.size_y):
                         if field[x][y] == EMPTY:
                             field[x][y] = turn
                             eval_val = self.eval_func(field,turn)
-                            history.delete(item)
-                            item.append([x,y])
-                            history.input(item,eval_val)
+                            #pdb.set_trace()#######################
+                            newitem = item + [[x,y]]
+                            history.input(newitem,eval_val)
                             if self.judge(turn,field):
                                 FLAG = 1
                             field[x][y] = EMPTY
@@ -171,13 +175,6 @@ class rule:
                                 
         return history,FLAG
                             
-    def max_index(self,arr):
-        d = dict( (j,(x,y)) for x,i in enumerate(arr) for y,j in enumerate(i))
-        return d[max(max(arr))]
-        
-    def min_index(self,arr):
-        d = dict( (j,(x,y)) for x,i in enumerate(arr) for y,j in enumerate(i))
-        return d[min(min(arr))]        
         
     def print_board(self):
         for item in self.field:
@@ -191,9 +188,13 @@ class History:
         self.point.append(point)
         self.eval_val.append(eval_val)
     def delete(self,point):
-        idx = self.point.index(point)
-        self.point.pop(idx)
-        self.eval_val.pop(idx)
+        if point in self.point:
+            idx = self.point.index(point)
+            self.point.pop(idx)
+            self.eval_val.pop(idx)
+            return 1
+        else:
+            return 0
     def index(self,point):
         return self.point.index(point)
     def max_eval(self):
