@@ -5,12 +5,10 @@ from pygame.locals import *
 import random
 import sys
 import rule
+from setting import *
 
-CS = 30  # セルのサイズ
-NUM_ROW = 19  # フィールドの行数
-NUM_COL = 19  # フィールドの列数
+
 SCR_RECT = Rect(0, 0, CS*NUM_ROW, CS*NUM_COL)  # スクリーンサイズ
-EMPTY, BLACK, WHITE = 0, 1, 2
 
 class gameboard:
     def __init__(self):
@@ -19,7 +17,7 @@ class gameboard:
         pygame.display.set_caption(u"Gomoku Narabe")
         self.font = pygame.font.SysFont(None, 16)
         self.field = [[EMPTY for x in range(NUM_COL)] for y in range(NUM_ROW)]
-        self.generation = 0  # 世代数
+        self.generation = 0  # 
         #self.run = False  # シミュレーション実行中か？
         self.cursor = [NUM_COL/2, NUM_ROW/2]
         self.turn = BLACK
@@ -59,7 +57,7 @@ class gameboard:
                     self.cursor = [x, y]
                     self.mouse_event(x,y)
                     print self.history
-                    if self.rule.judge(self.turn,r.field):
+                    if self.rule.judge(self.turn,self.rule.field):
                         self.gamewin(self.screen)
                         FLAG = 0
 
@@ -97,6 +95,7 @@ class gameboard:
         for y in range(NUM_ROW):
             for x in range(NUM_COL):
                 self.field[x][y] = EMPTY
+        self.history = []
             
     def draw(self, screen):
         """フィールドを描画"""

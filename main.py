@@ -3,7 +3,6 @@
 
 import gameboard
 
-
 if __name__=='__main__':
     board = gameboard.gameboard()
     board.main()
