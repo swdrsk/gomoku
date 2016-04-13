@@ -71,7 +71,6 @@ class gameboard:
         self.history.append([x,y,self.turn])    
         self.rule.field_update(self.field)
         self.turn_change()
-        #print self.rule.print_board()
 
     def mouse_event_complay(self,x,y):
         if not self.field[x][y] == EMPTY:
@@ -86,7 +85,7 @@ class gameboard:
         self.history.append([cx,cy,self.turn])
         self.rule.field_update(self.field)
         self.turn_change()
-        print cx,cy
+        print("%d,%d"%(cx,cy))
         
     def turn_change(self):
         if self.turn == BLACK:

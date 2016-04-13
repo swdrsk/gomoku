@@ -7,8 +7,10 @@ import sys
 import rule
 from setting import *
 
+import pdb
 
 SCR_RECT = Rect(0, 0, CS*NUM_ROW, CS*NUM_COL)  # スクリーンサイズ
+FLAG = 1
 
 class gameboard:
     def __init__(self):
@@ -20,7 +22,7 @@ class gameboard:
         self.generation = 0  # 
         #self.run = False  # シミュレーション実行中か？
         self.cursor = [NUM_COL/2, NUM_ROW/2]
-        self.turn = BLACK
+        self.turn = WHITE #Fiest turn. It must be BLACK but WHITE works good, it should be isnpected
         self.rule = rule.rule(self.field)
         self.history = []
         
@@ -34,7 +36,7 @@ class gameboard:
             clock.tick(60)
             self.draw(self.screen)
             pygame.display.update()
-
+            
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
@@ -55,26 +57,37 @@ class gameboard:
                     px, py = event.pos
                     x, y = px/CS, py/CS
                     self.cursor = [x, y]
-                    self.mouse_event(x,y)
-                    print self.history
+                    self.mouse_event_complay(x,y)
+                    #print self.history
                     if self.rule.judge(self.turn,self.rule.field):
-                        self.gamewin(self.screen)
+                        self.gamewin()
                         FLAG = 0
 
+
     def mouse_event(self,x,y):
+        if not self.field[x][y] == EMPTY:
+            return 
+        self.field[x][y] = self.turn
+        self.history.append([x,y,self.turn])    
+        self.rule.field_update(self.field)
         self.turn_change()
-        if self.field[x][y] == EMPTY:
-            if self.turn == BLACK:
-                self.field[x][y] = BLACK
-            elif self.turn == WHITE:
-                self.field[x][y] = WHITE
-            self.history.append([x,y,self.turn])
-            
-        #elif self.field[x][y] == BLACK or self.field[x][y] == WHITE:
-            #self.field[x][y] = EMPTY
-            self.rule.field_update(self.field)
-        #print self.rule.print_field()
-            
+        #print self.rule.print_board()
+
+    def mouse_event_complay(self,x,y):
+        if not self.field[x][y] == EMPTY:
+            return        
+        self.field[x][y] = self.turn
+        self.history.append([x,y,self.turn])
+        self.rule.field_update(self.field)
+        self.turn_change()
+
+        cx,cy = self.rule.complay()
+        self.field[cx][cy] = self.turn
+        self.history.append([cx,cy,self.turn])
+        self.rule.field_update(self.field)
+        self.turn_change()
+        print("%d,%d"cx,cy)
+        
     def turn_change(self):
         if self.turn == BLACK:
             self.turn = WHITE
@@ -82,12 +95,12 @@ class gameboard:
             self.turn = BLACK
 
     def back(self):
-        if self.history==[]:
-            print "cant back any more"
-            return
-        p = self.history.pop()
-        self.field[p[0]][p[1]] = EMPTY
-        self.turn_change()
+        try:
+            p = self.history.pop()
+            self.field[p[0]][p[1]] = EMPTY
+            self.turn_change()
+        except:
+            print "can't back any more"
             
     def clear(self):
         """ゲームを初期化"""
@@ -113,9 +126,9 @@ class gameboard:
         # カーソルを描画
         pygame.draw.rect(screen, (0,0,255), Rect(self.cursor[0]*CS,self.cursor[1]*CS,CS,CS), 1)
 
-    def gamewin(self, screen):
+    def gamewin(self):
         # ゲーム情報を描画
-        turn2char = [[] for i in range(5)]
+        turn2char = ["" for i in range(5)]
         turn2char[BLACK] = "BLACK"
         turn2char[WHITE] = "WHITE"
-        screen.blit(self.font.render("%s WINS" % turn2char[self.turn], True, (0,255,0)), (0,0))
+        self.screen.blit(self.font.render("%s WINS" % turn2char[self.turn], True, (0,255,0)), (0,0))
